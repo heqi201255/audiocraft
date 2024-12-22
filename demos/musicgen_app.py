@@ -524,3 +524,5 @@ if __name__ == "__main__":
         ui_batched(launch_kwargs)
     else:
         ui_full(launch_kwargs)
+
+# Generate an electronic pop track at 120BPM in C major, happy mood. Structure: 4-bar intro, 8-bar verse, 4-bar pre-chorus, 8-bar chorus, 8-bar verse, 4-bar pre-chorus, 8-bar chorus, 4-bar bridge, 8-bar chorus, 4-bar outro.
