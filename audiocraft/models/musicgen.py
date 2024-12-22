@@ -632,7 +632,7 @@ class MusicGen(BaseGenModel):
                                                f"the {from_bar}th bar and {to_bar}th bar regarding to the whole song, "
                                                f"your generated segment includes {sections_stat} of the song structure.")
                     try:
-                        previous_detail_index = att.text['description'].index("For now, you are generating the segment")
+                        previous_detail_index = att.text['description'].index("\nFor now, you are generating the segment")
                     except ValueError:
                         previous_detail_index = len(att.text['description'])
                     att.text['description'] = att.text['description'][:previous_detail_index] + prompt_with_detail
