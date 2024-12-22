@@ -631,7 +631,11 @@ class MusicGen(BaseGenModel):
                                                f"between {from_sec}th second and {to_sec}th second, which corresponds to "
                                                f"the {from_bar}th bar and {to_bar}th bar regarding to the whole song, "
                                                f"your generated segment includes {sections_stat} of the song structure.")
-                    att.text['description'] = prompt_with_detail
+                    try:
+                        previous_detail_index = att.text['description'].index("For now, you are generating the segment")
+                    except ValueError:
+                        previous_detail_index = len(att.text['description'])
+                    att.text['description'] = att.text['description'][:previous_detail_index] + prompt_with_detail
                     print(f"Iteration prompt: {att.text['description']}")
                     print(f"Attribute text: {att.text}\nAttribute wav: {att.wav}\nAttribute attributes: {att.attributes}\nText attributes: {att.text_attributes}\nWav attributes: {att.wav_attributes}\nJoint embed: {att.joint_embed}\nJoint embed attributes: {att.joint_embed_attributes}")
                 for attr, ref_wav in zip(attributes, ref_wavs):
