@@ -394,7 +394,7 @@ class MusicGen(BaseGenModel):
                               top_p: float = 0.0, temperature: float = 1.0,
                               duration: float = 30.0, cfg_coef: float = 3.0,
                               cfg_coef_beta: tp.Optional[float] = None,
-                              two_step_cfg: bool = False, extend_stride: float = 18,):
+                              two_step_cfg: bool = False, extend_stride: float = 10,):
         """Set the generation parameters for MusicGen.
 
         Args:
@@ -600,6 +600,7 @@ class MusicGen(BaseGenModel):
             x = 0
             sections = f"{'i' * 4}{'v' * 8}{'p' * 4}{'c' * 8}{'v' * 8}{'p' * 4}{'c' * 8}{'b' * 4}{'c' * 8}{'o' * 4}"
             sec_convert = {'i': 'Intro', 'v': 'Verse', 'p': 'Pre-Chorus', 'c': 'Chorus', 'b': 'Bridge', 'o': 'Outro'}
+            base_text_prompt = attributes[0].text['description']
             while current_gen_offset + prompt_length < total_gen_len:
                 print(f"Iteration {x}")
                 x += 1
@@ -631,11 +632,7 @@ class MusicGen(BaseGenModel):
                                                f"between {from_sec}th second and {to_sec}th second, which corresponds to "
                                                f"the {from_bar}th bar and {to_bar}th bar regarding to the whole song, "
                                                f"your generated segment includes {sections_stat} of the song structure.")
-                    try:
-                        previous_detail_index = att.text['description'].index("\nFor now, you are generating the segment")
-                    except ValueError:
-                        previous_detail_index = len(att.text['description'])
-                    att.text['description'] = att.text['description'][:previous_detail_index] + prompt_with_detail
+                    att.text['description'] = base_text_prompt + prompt_with_detail
                     print(f"Iteration prompt: {att.text['description']}")
                     print(f"Attribute text: {att.text}\nAttribute wav: {att.wav}\nAttribute attributes: {att.attributes}\nText attributes: {att.text_attributes}\nWav attributes: {att.wav_attributes}\nJoint embed: {att.joint_embed}\nJoint embed attributes: {att.joint_embed_attributes}")
                 for attr, ref_wav in zip(attributes, ref_wavs):
