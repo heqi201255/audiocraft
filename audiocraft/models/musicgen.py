@@ -628,7 +628,7 @@ class MusicGen(BaseGenModel):
                     sections_stat[-1] = "and " + sections_stat[-1]
                 sections_stat = ", ".join(sections_stat)
                 for ii, att in enumerate(attributes):
-                    prompt_with_detail = (f"For now, you are generating the segment "
+                    prompt_with_detail = (f"\nFor now, you are generating the segment "
                                                f"between {from_sec}th second and {to_sec}th second, which corresponds to "
                                                f"the {from_bar}th bar and {to_bar}th bar regarding to the whole song, "
                                                f"your generated segment includes {sections_stat} of the song structure.")
