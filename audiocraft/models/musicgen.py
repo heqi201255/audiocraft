@@ -606,7 +606,7 @@ class MusicGen(BaseGenModel):
                 x += 1
                 time_offset = current_gen_offset / self.frame_rate
                 chunk_duration = min(self.duration - time_offset, self.max_duration)
-                print(time_offset, chunk_duration)
+                # print(time_offset, chunk_duration)
                 max_gen_len = int(chunk_duration * self.frame_rate)
                 from_sec = time_offset
                 to_sec = from_sec + chunk_duration
@@ -629,8 +629,8 @@ class MusicGen(BaseGenModel):
                 sections_stat = ", ".join(sections_stat)
                 for ii, att in enumerate(attributes):
                     prompt_with_detail = (f"\nFor now, you are generating the segment "
-                                               f"between {from_sec}th second and {to_sec}th second, which corresponds to "
-                                               f"the {from_bar}th bar and {to_bar}th bar regarding to the whole song, "
+                                               f"between the {from_sec}th second and the {to_sec}th second, which corresponds to "
+                                               f"the the {from_bar}th bar and the {to_bar}th bar regarding to the whole song, "
                                                f"your generated segment includes {sections_stat} of the song structure.")
                     att.text['description'] = base_text_prompt + prompt_with_detail
                     print(f"Iteration prompt: {att.text['description']}")
