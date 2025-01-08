@@ -17,7 +17,7 @@ def generate(sec_pattern: str, key: str, demo_id: int):
     output = model.generate(descriptions=[prompt], progress=True, return_tokens=False, sec_pattern=sec_pattern)
     save_path = f"/root/audiocraft/musicgen_ablations/outputs/{sec_pattern}"
     os.makedirs(save_path, exist_ok=True)
-    torchaudio.save(os.path.join(save_path, f"musicgen_{sec_pattern}_{key}_{demo_id}.wav"), output[0], 32000)
+    torchaudio.save(os.path.join(save_path, f"musicgen_{sec_pattern}_{key}_{demo_id}.wav"), output[0].detach().cpu(), 32000)
 
 # def generate_continuation(text_prompt: str, audio_file: str):
 #     prompt_waveform, prompt_sr = torchaudio.load(audio_file)

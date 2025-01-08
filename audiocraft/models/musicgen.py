@@ -635,7 +635,7 @@ class MusicGen(BaseGenModel):
                                                f"your generated segment includes {sections_stat} of the song structure.")
                     att.text['description'] = base_text_prompt + prompt_with_detail
                     print(f"Iteration prompt: {att.text['description']}")
-                    print(f"Attribute text: {att.text}\nAttribute wav: {att.wav}\nAttribute attributes: {att.attributes}\nText attributes: {att.text_attributes}\nWav attributes: {att.wav_attributes}\nJoint embed: {att.joint_embed}\nJoint embed attributes: {att.joint_embed_attributes}")
+                    # print(f"Attribute text: {att.text}\nAttribute wav: {att.wav}\nAttribute attributes: {att.attributes}\nText attributes: {att.text_attributes}\nWav attributes: {att.wav_attributes}\nJoint embed: {att.joint_embed}\nJoint embed attributes: {att.joint_embed_attributes}")
                 for attr, ref_wav in zip(attributes, ref_wavs):
                     wav_length = ref_wav.length.item()
                     if wav_length == 0:
