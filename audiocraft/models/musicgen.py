@@ -21,6 +21,7 @@ from .builders import get_debug_compression_model, get_debug_lm_model
 from .loaders import load_compression_model, load_lm_model
 from ..data.audio_utils import convert_audio
 from ..modules.conditioners import ConditioningAttributes, WavCondition, StyleConditioner
+from section_patterns import form_pattern_string_list, form_stat_prompt
 
 
 MelodyList = tp.List[tp.Optional[torch.Tensor]]
@@ -546,7 +547,7 @@ class MusicGen(BaseGenModel):
         return attributes, prompt_tokens
 
     def _generate_tokens(self, attributes: tp.List[ConditioningAttributes],
-                         prompt_tokens: tp.Optional[torch.Tensor], progress: bool = False) -> torch.Tensor:
+                         prompt_tokens: tp.Optional[torch.Tensor], progress: bool = False, sec_pattern: str = None) -> torch.Tensor:
         """Generate discrete audio tokens given audio prompt and/or conditions.
 
         Args:
@@ -598,8 +599,7 @@ class MusicGen(BaseGenModel):
             assert self.extend_stride < self.max_duration, "Cannot stride by more than max generation duration."
             stride_tokens = int(self.frame_rate * self.extend_stride)
             x = 0
-            sections = f"{'i' * 4}{'v' * 8}{'p' * 4}{'c' * 8}{'v' * 8}{'p' * 4}{'c' * 8}{'b' * 4}{'c' * 8}{'o' * 4}"
-            sec_convert = {'i': 'Intro', 'v': 'Verse', 'p': 'Pre-Chorus', 'c': 'Chorus', 'b': 'Bridge', 'o': 'Outro'}
+            pattern_string_list = form_pattern_string_list(sec_pattern) if sec_pattern is not None else []
             base_text_prompt = attributes[0].text['description']
             while current_gen_offset + prompt_length < total_gen_len:
                 print(f"Iteration {x}")
@@ -612,21 +612,22 @@ class MusicGen(BaseGenModel):
                 to_sec = from_sec + chunk_duration
                 from_bar = int(BarStepTick.sec2bars(from_sec, 120))
                 to_bar = int(BarStepTick.sec2bars(to_sec, 120))
-                belong_sections = sections[from_bar: to_bar]
-                sections_stat = []
-                for s in belong_sections:
-                    label = sec_convert[s]
-                    if not sections_stat:
-                        sections_stat.append([label, 1])
-                        continue
-                    if sections_stat[-1][0] == label:
-                        sections_stat[-1][1] = sections_stat[-1][1]+1
-                    else:
-                        sections_stat.append([label, 1])
-                sections_stat = [f"{count} bars of {label}" for label, count in sections_stat]
-                if len(sections_stat) > 1:
-                    sections_stat[-1] = "and " + sections_stat[-1]
-                sections_stat = ", ".join(sections_stat)
+                # belong_sections = sections[from_bar: to_bar]
+                # sections_stat = []
+                # for s in belong_sections:
+                #     label = sec_convert[s]
+                #     if not sections_stat:
+                #         sections_stat.append([label, 1])
+                #         continue
+                #     if sections_stat[-1][0] == label:
+                #         sections_stat[-1][1] = sections_stat[-1][1]+1
+                #     else:
+                #         sections_stat.append([label, 1])
+                # sections_stat = [f"{count} bars of {label}" for label, count in sections_stat]
+                # if len(sections_stat) > 1:
+                #     sections_stat[-1] = "and " + sections_stat[-1]
+                # sections_stat = ", ".join(sections_stat)
+                sections_stat = form_stat_prompt(pattern_string_list, from_bar, to_bar)
                 for ii, att in enumerate(attributes):
                     prompt_with_detail = (f"\nFor now, you are generating the segment "
                                                f"between the {from_sec}th second and the {to_sec}th second, which corresponds to "
