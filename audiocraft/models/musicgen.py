@@ -21,7 +21,7 @@ from .builders import get_debug_compression_model, get_debug_lm_model
 from .loaders import load_compression_model, load_lm_model
 from ..data.audio_utils import convert_audio
 from ..modules.conditioners import ConditioningAttributes, WavCondition, StyleConditioner
-from section_patterns import form_pattern_string_list, form_stat_prompt
+from .section_patterns import form_pattern_string_list, form_stat_prompt
 
 
 MelodyList = tp.List[tp.Optional[torch.Tensor]]
